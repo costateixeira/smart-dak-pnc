@@ -1,10 +1,10 @@
-id: smart.who.int.dak-empty
-canonical: http://smart.who.int/dak-empty
-name: DAKEmpty
-title: SMART DAK Empty
-description: An empty Digital Adaptation Kit (DAK) Implementation Guide to be used as a starting point for publishing SMART DAK content
+id: smart.who.int.dak-pnc
+canonical: http://smart.who.int/dak-pnc
+name: DAKPnc
+title: SMART DAK PNC
+description: SMART DAK for postnatal care (PNC)
 status: draft # draft | active | retired | unknown
-version: 0.1.0
+version: 0.9.9
 fhirVersion: 4.0.1 # https://www.hl7.org/fhir/valueset-FHIR-version.html
 copyrightYear: 2023+
 releaseLabel: ci-build # ci-build | draft | qa-preview | ballot | trial-use | release | update | normative+trial-use
@@ -53,6 +53,8 @@ pages:
       title: Functional Requirements
     non-functional-requirements.md:
       title: Non-functional Requirements
+    system-requirements.md:
+      title: System Requirements
   data-models-and-exchange.md:
     title: Data Models and Exchange
     system-actors.md:
@@ -106,8 +108,9 @@ menu:
     Data Dictionary: dictionary.html
     Decision-support Logic: decision-logic.html
     Indicator and Performance Metrics: indicators.html
-    Functional Requirements: functional-requirements.html
-    Non-functional Requirements: non-functional-requirements.html
+    System Requirements: system-requirements.html
+    #Functional Requirements: functional-requirements.html
+    #Non-functional Requirements: non-functional-requirements.html
   Data Models and Exchange:
     System Actors: system-actors.html
     Sequence Diagrams: sequence-diagrams.html
@@ -257,7 +260,7 @@ menu:
 #
 #   setId: always # always | standalone-only
 dependencies:
-  who.base: current
+  smart.who.int.base: current
 
 
 parameters: 
