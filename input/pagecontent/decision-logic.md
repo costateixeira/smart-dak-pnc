@@ -1,10 +1,6 @@
-This page describes the decision-support logic included in the WHO
-Digital Adaptation Kit (DAK) for PNC. 
+This page describes the decision-support logic included in the WHO Digital Adaptation Kit (DAK) for PNC. 
 
-The decision-support logic component provides the decision logic and
-algorithms in accordance with the recommendations within PNC guidelines and guidance and deconstruct them into a machine readable format that clearly labels the
-inputs and outputs that would be operationalized in a digital
-decision-support system. The structure of the decision-support tables is based on an adaptation of the Decision Model and Notation (DMN™), an industry standard for modelling and executing decision logic.<br>
+The decision-support logic component provides the decision logic and algorithms in accordance with the recommendations within PNC guidelines and guidance and deconstruct them into a machine readable format that clearly labels the inputs and outputs that would be operationalized in a digital decision-support system. The structure of the decision-support tables is based on an adaptation of the Decision Model and Notation (DMN™), an industry standard for modelling and executing decision logic.<br>
 The table below presents the versions of the decision-support logic.
 
 | Version | Link |
