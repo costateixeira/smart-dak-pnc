@@ -2,8 +2,6 @@
 
 Functional requirements describe the capabilities the system must have in order to meet the end-users’ needs and achieve tasks within the business process.
 
-The functional requirements are listed in the high-level functional and non-functional requirements implementation tool of the WHO Digital Adaptation Kit for postnatal care (PNC), available [here](system-requirements.html).
-
 Please note that these are not exhaustive lists and should be modified according to context and user persona needs.
 
 
@@ -11,6 +9,7 @@ Please note that these are not exhaustive lists and should be modified according
 
 Non-functional requirements provide the general attributes and features of the digital system to ensure usability and overcome technical and physical constraints. Examples of non-functional requirements include providing password-protected access for authorized users, logging all data and system errors, and provide the ability to easily back up information.
 
+The table below presents the versions of the high-level functional and non-functional requirements implementation tool published as part of the PNC DAK.
 
 | Version | Link |
 |---|---|
