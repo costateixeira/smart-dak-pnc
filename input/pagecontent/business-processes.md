@@ -21,7 +21,7 @@ The following table describes the workflows of the included processes.
       <td>Registration</td>
       <td>PNC.A</td>
       <td>Woman, Newborn/infant, Health workers (one or more 
-of: CHW, Nursing associate professional, or Midwifery associate professional.)</td>
+of:  community health worker (CHW), Nursing associate professional, or Midwifery associate professional.)</td>
       <td>To identify and register or update registration information for a postpartum woman and/or newborn/infant so that she and/or the newborn/infant can proceed to the PNC (first or follow-up) contact</td>
     </tr>
      <tr class="odd">
