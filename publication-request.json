@@ -1,0 +1,14 @@
+{
+    "package-id" : "smart.who.int.dak-pnc",
+    "title" : "SMART DAK PNC", 
+    "category" : "base",
+    "introduction" : "SMART DAK PNC",
+    "version" : "0.9.9",
+    "desc" : "0.9.9 Draft Release",
+    "mode" : "milestone",    
+    "path" : "http://smart.who.int/dak-pnc/v0.9.9",
+    "ci-build": "http://worldhealthorganization.github.io/smart-dak-pnc", 
+    "first": true,
+    "status" : "release",
+    "sequence" : "Releases"
+  }
