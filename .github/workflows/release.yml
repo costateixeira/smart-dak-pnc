@@ -14,6 +14,9 @@ jobs:
     outputs:
       file_exists: ${{ steps.checkfile.outputs.exists }}
     steps:
+      - name: Echo starting
+        run: echo "✅ IG release workflow triggered successfully"
+    
       - name: Checkout code
         uses: actions/checkout@v3
         with:
