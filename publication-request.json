@@ -1,7 +1,7 @@
 {
     "package-id" : "smart.who.int.dak-pnc",
     "title" : "SMART DAK PNC", 
-    "category" : "base",
+    "category" : "SMART (WHO)",
     "introduction" : "SMART DAK PNC",
     "version" : "0.9.9",
     "desc" : "0.9.9 Draft Release",
