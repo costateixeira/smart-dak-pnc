@@ -1,11 +1,11 @@
-# This workflow calls a remote workflow for setting up a release publication, 
-# This workflow is triggered by the creation of a GitHub release and requires a file called publication-request.json in the branch.
-
 name: Release build
 
 on:
-  release:
+  release:            # catches all release events; or use `types: [published]`
   workflow_dispatch:
+
+permissions:
+  contents: write     # needed so the CALLED workflow can push to gh-pages
 
 jobs:
   check:
@@ -15,10 +15,11 @@ jobs:
     steps:
       - name: Echo starting
         run: echo "✅ IG release workflow triggered successfully"
-    
+
       - name: Checkout code
         uses: actions/checkout@v4
         with:
+          # On release: use the tag; otherwise use the ref selected in the UI
           ref: ${{ github.event_name == 'release' && github.event.release.tag_name || github.ref }}
           fetch-depth: 0
 
@@ -32,7 +33,8 @@ jobs:
           fi
 
   trigger:
-#    needs: check
-#    if: needs.check.outputs.file_exists == 'true'
+    # Uncomment if you want to require the file:
+    # needs: check
+    # if: needs.check.outputs.file_exists == 'true'
     uses: costateixeira/smart-html/.github/workflows/release.yml@main
-  
+    secrets: inherit     # include if the called workflow needs repo secrets
