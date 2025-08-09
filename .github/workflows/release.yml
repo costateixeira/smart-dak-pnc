@@ -1,4 +1,4 @@
-name: Release build
+name: Release build 2
 
 on:
   release:            # catches all release events; or use `types: [published]`
