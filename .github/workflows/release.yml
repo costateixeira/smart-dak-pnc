@@ -26,9 +26,9 @@ jobs:
         id: checkfile
         run: |
           if [[ -f "publication-request.json" ]]; then
-            echo "::set-output name=exists::true"
+            echo "exists=true" >> "$GITHUB_OUTPUT"
           else
-            echo "::set-output name=exists::false"
+            echo "exists=false" >> "$GITHUB_OUTPUT"
           fi
 
   trigger:
