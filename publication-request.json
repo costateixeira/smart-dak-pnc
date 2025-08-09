@@ -3,12 +3,12 @@
     "title" : "SMART DAK PNC", 
     "category" : "base",
     "introduction" : "SMART DAK PNC",
-    "version" : "0.9.9",
-    "desc" : "0.9.9 Draft Release",
+    "version" : "1.0.0",
+    "desc" : "1.0.0 Release",
     "mode" : "milestone",    
-    "path" : "http://smart.who.int/dak-pnc/v0.9.9",
+    "path" : "http://smart.who.int/dak-pnc/v1.0.0",
     "ci-build": "http://worldhealthorganization.github.io/smart-dak-pnc", 
-    "first": true,
+    "first": false,
     "status" : "release",
     "sequence" : "Releases"
   }

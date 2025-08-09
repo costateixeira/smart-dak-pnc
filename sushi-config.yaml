@@ -4,7 +4,7 @@ name: DAKPnc
 title: SMART DAK PNC
 description: SMART DAK for postnatal care (PNC)
 status: active # draft | active | retired | unknown
-version: 0.9.9
+version: 1.0.0
 fhirVersion: 4.0.1 # https://www.hl7.org/fhir/valueset-FHIR-version.html
 copyrightYear: 2023+
 releaseLabel: release # ci-build | draft | qa-preview | ballot | trial-use | release | update | normative+trial-use
