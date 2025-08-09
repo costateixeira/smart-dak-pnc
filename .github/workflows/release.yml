@@ -23,14 +23,14 @@ jobs:
           ref: ${{ github.event_name == 'release' && github.event.release.tag_name || github.ref }}
           fetch-depth: 0
 
-      - name: Check for publication-request.json
-        id: checkfile
-        run: |
-          if [[ -f "publication-request.json" ]]; then
-            echo "exists=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "exists=false" >> "$GITHUB_OUTPUT"
-          fi
+#      - name: Check for publication-request.json
+#        id: checkfile
+#        run: |
+#          if [[ -f "publication-request.json" ]]; then
+#            echo "exists=true" >> "$GITHUB_OUTPUT"
+#          else
+#            echo "exists=false" >> "$GITHUB_OUTPUT"
+#          fi
 
   trigger:
     # Uncomment if you want to require the file:
