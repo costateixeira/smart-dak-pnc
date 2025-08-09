@@ -17,9 +17,10 @@ jobs:
         run: echo "✅ IG release workflow triggered successfully"
     
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.release.tag_name }}
+          ref: ${{ github.event_name == 'release' && github.event.release.tag_name || github.ref }}
+          fetch-depth: 0
 
       - name: Check for publication-request.json
         id: checkfile
