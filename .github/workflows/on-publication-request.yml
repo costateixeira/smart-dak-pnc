@@ -39,14 +39,12 @@ jobs:
       - name: Run IG release (reusable)
         uses: ./.github/workflows/release.yml
         secrets: inherit
-        with: {}
-        env:
-          PUBREQ_PACKAGE_ID: ${{ steps.parse.outputs.package_id }}
-          PUBREQ_VERSION:    ${{ steps.parse.outputs.version }}
-          PUBREQ_CANONICAL:  ${{ steps.parse.outputs.canonical }}
-          PUBREQ_PATH:       ${{ steps.parse.outputs.site_path }}
-          PUBLISH_GH_PAGES:  "true"
-          SITEPREVIEW_DIR:   "sitepreview"
+        with:
+          pubreq_package_id: ${{ steps.parse.outputs.package_id }}
+          pubreq_version:    ${{ steps.parse.outputs.version }}
+          pubreq_canonical:  ${{ steps.parse.outputs.canonical }}
+          pubreq_path:       ${{ steps.parse.outputs.site_path }}
+          sitepreview_dir:   sitepreview
 
       # Optional: comment back on the issue
       - name: Comment success
