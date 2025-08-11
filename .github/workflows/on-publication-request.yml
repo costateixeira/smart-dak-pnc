@@ -1,0 +1,72 @@
+name: Run publication on approval
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write
+  issues: read
+
+jobs:
+  publish:
+    # Only run if the label is 'publication-approved' AND the labeller is repo member/collaborator/owner
+    if: |
+      contains(github.event.issue.labels.*.name, 'publication-approved') &&
+      (github.event.sender.author_association == 'OWNER' ||
+       github.event.sender.author_association == 'MEMBER' ||
+       github.event.sender.author_association == 'COLLABORATOR')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Parse issue form fields
+        id: parse
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = context.payload.issue.body || "";
+            function pick(label) {
+              const rx = new RegExp(`###\\s+${label}[\\r\\n]+([\\s\\S]*?)(?:\\r?\\n###|$)`, 'i');
+              const m = body.match(rx);
+              return m ? m[1].trim() : "";
+            }
+            core.setOutput('package_id', pick("Package ID"));
+            core.setOutput('version',    pick("Version"));
+            core.setOutput('canonical',  pick("Canonical URL"));
+            core.setOutput('site_path',  pick("Site path"));
+
+      # Call your existing reusable release workflow (the one with `workflow_call:`)
+      - name: Run IG release (reusable)
+        uses: ./.github/workflows/release.yml
+        secrets: inherit
+        with: {}
+        env:
+          PUBREQ_PACKAGE_ID: ${{ steps.parse.outputs.package_id }}
+          PUBREQ_VERSION:    ${{ steps.parse.outputs.version }}
+          PUBREQ_CANONICAL:  ${{ steps.parse.outputs.canonical }}
+          PUBREQ_PATH:       ${{ steps.parse.outputs.site_path }}
+          PUBLISH_GH_PAGES:  "true"
+          SITEPREVIEW_DIR:   "sitepreview"
+
+      # Optional: comment back on the issue
+      - name: Comment success
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: context.issue.number,
+              body: "✅ Publication workflow started. Watch Actions for status."
+            });
+
+      - name: Comment failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: context.issue.number,
+              body: "❌ Publication workflow failed to start. Check workflow logs."
+            });
