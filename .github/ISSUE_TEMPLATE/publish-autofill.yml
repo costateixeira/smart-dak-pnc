@@ -1,0 +1,69 @@
+name: Autofill publish metadata
+on:
+  issues:
+    types: [opened, edited, reopened]
+
+jobs:
+  autofill:
+    if: contains(github.event.issue.labels.*.name, 'publication-request')
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      # Parse sushi-config.yaml (fallbacks optional – see notes below)
+      - name: Read sushi-config.yaml
+        id: read
+        run: |
+          set -e
+          PKG_ID=$(grep -E '^id:' sushi-config.yaml | awk '{print $2}')
+          VERSION=$(grep -E '^version:' sushi-config.yaml | awk '{print $2}')
+          CANONICAL=$(grep -E '^canonical:' sushi-config.yaml | awk '{print $2}')
+          # Trim quotes if present
+          PKG_ID=${PKG_ID//\"/}; VERSION=${VERSION//\"/}; CANONICAL=${CANONICAL//\"/}
+          echo "package_id=$PKG_ID" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "canonical=$CANONICAL" >> $GITHUB_OUTPUT
+
+      - name: Compute site path
+        id: compute
+        run: |
+          set -e
+          CANON="${{ steps.read.outputs.canonical }}"
+          PATH_PART=$(echo "$CANON" | sed -E 's#^https?://[^/]+/##')
+          echo "site_path=/${PATH_PART}/v${{ steps.read.outputs.version }}" >> $GITHUB_OUTPUT
+
+      - name: Update title and post preview
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const {owner, repo} = context.repo;
+            const issue_number = context.issue.number;
+            const pkg = process.env.PKG = '${{ steps.read.outputs.package_id }}';
+            const ver = process.env.VER = '${{ steps.read.outputs.version }}';
+            const can = process.env.CAN = '${{ steps.read.outputs.canonical }}';
+            const path = process.env.PATH = '${{ steps.compute.outputs.site_path }}';
+
+            // Update issue title
+            await github.rest.issues.update({
+              owner, repo, issue_number,
+              title: `Publish: ${pkg} ${ver}`
+            });
+
+            // Post a comment with the calculated values
+            const body = [
+              '### Computed publication metadata',
+              '',
+              '| Field | Value |',
+              '|---|---|',
+              `| Package ID | ${pkg} |`,
+              `| Version | ${ver} |`,
+              `| Canonical | ${can} |`,
+              `| Site path | ${path} |`,
+              '',
+              'Approver: add the label **publication-approved** or comment `/approve` to proceed.'
+            ].join('\n');
+
+            await github.rest.issues.createComment({ owner, repo, issue_number, body });

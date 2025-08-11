@@ -1,0 +1,82 @@
+name: Publication approval
+
+on:
+  issues:
+    types: [labeled]
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write    # needed to create the Release
+  issues: write
+
+jobs:
+  approve:
+    if: |
+      (github.event_name == 'issues' && github.event.label.name == 'publication-approved') ||
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '/approve'))
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # default branch is fine; we only need files to read metadata
+          fetch-depth: 0
+
+      - name: Read sushi-config.yaml
+        id: meta
+        run: |
+          set -e
+          PKG_ID=$(grep -E '^id:' sushi-config.yaml | awk '{print $2}' | tr -d '"')
+          VERSION=$(grep -E '^version:' sushi-config.yaml | awk '{print $2}' | tr -d '"')
+          CANONICAL=$(grep -E '^canonical:' sushi-config.yaml | awk '{print $2}' | tr -d '"')
+          echo "pkg=$PKG_ID" >> $GITHUB_OUTPUT
+          echo "ver=$VERSION" >> $GITHUB_OUTPUT
+          echo "can=$CANONICAL" >> $GITHUB_OUTPUT
+
+      - name: Comment with final metadata
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const {owner, repo} = context.repo;
+            const issue_number = context.issue.number || context.payload.issue.number;
+            const body = [
+              '### Final publication metadata',
+              '',
+              `- Package ID: ${{ steps.meta.outputs.pkg }}`,
+              `- Version: ${{ steps.meta.outputs.ver }}`,
+              `- Canonical: ${{ steps.meta.outputs.can }}`,
+              '',
+              'Creating a release to trigger the build…'
+            ].join('\n');
+            await github.rest.issues.createComment({ owner, repo, issue_number, body });
+
+      - name: Create release (triggers “Release build 2”)
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const {owner, repo} = context.repo;
+            const tag = `v${{ steps.meta.outputs.ver }}`;
+            const name = `${{ steps.meta.outputs.pkg }} ${{ steps.meta.outputs.ver }}`;
+            const body = [
+              'Auto-created after issue approval.',
+              `Package: ${{ steps.meta.outputs.pkg }}`,
+              `Canonical: ${{ steps.meta.outputs.can }}`
+            ].join('\n');
+
+            // If the release already exists, do nothing (idempotent)
+            try {
+              await github.rest.repos.getReleaseByTag({ owner, repo, tag });
+              core.info(`Release ${tag} already exists.`);
+            } catch {
+              await github.rest.repos.createRelease({
+                owner, repo,
+                tag_name: tag,
+                name,
+                body,
+                draft: false,
+                prerelease: false
+                // target_commitish omitted -> defaults to default branch head
+              });
+              core.info(`Release ${tag} created.`);
+            }
